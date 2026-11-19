@@ -1,4 +1,4 @@
-const APP_ID = "350cqOOeGCMWqrKgybWnf"; // <-- REPLACE 12345 WITH YOUR NUMERIC APP ID FROM MANAGE APPS
+const APP_ID = "350cqOOeGCMWqrKgybWnf";
 const WS_URL = `wss://://derivws.com{APP_ID}`;
 
 // DOM Elements
@@ -56,21 +56,24 @@ function parseOAuthCallback() {
 
 // 2. OAuth Login & Logout Handlers
 function redirectToDerivLogin() {
-  if (!APP_ID || APP_ID === "12345" || isNaN(Number(APP_ID))) {
-    alert("Please replace 12345 on Line 1 of app.js with your numeric Deriv App ID.");
+  if (!APP_ID || APP_ID === "YOUR_APP_ID") {
+    alert("Please set your Deriv App ID in app.js first.");
     return;
   }
-  window.location.href = `https://deriv.com{APP_ID}`;
+  const redirectUri = encodeURIComponent(window.location.origin);
+  window.location.href = `https://deriv.com{APP_ID}&redirect_uri=${redirectUri}`;
 }
 
-loginBtn.addEventListener("click", redirectToDerivLogin);
-heroLoginBtn.addEventListener("click", redirectToDerivLogin);
+if (loginBtn) loginBtn.addEventListener("click", redirectToDerivLogin);
+if (heroLoginBtn) heroLoginBtn.addEventListener("click", redirectToDerivLogin);
 
-logoutBtn.addEventListener("click", () => {
-  localStorage.removeItem("allano_accounts");
-  localStorage.removeItem("allano_active_acct");
-  window.location.reload();
-});
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("allano_accounts");
+    localStorage.removeItem("allano_active_acct");
+    window.location.reload();
+  });
+}
 
 // 3. Account Switcher Setup
 function populateAccountSwitcher() {
@@ -116,7 +119,6 @@ function connectWebSocket() {
       return;
     }
 
-    // Handle Authorization
     if (data.msg_type === "authorize") {
       const { loginid, balance, currency, is_virtual } = data.authorize;
       accountIdEl.textContent = loginid;
@@ -130,31 +132,26 @@ function connectWebSocket() {
       landingSection.classList.add("hidden");
       dashboardSection.classList.remove("hidden");
 
-      // Subscribe to Balance, Live Ticks, and Open Contracts
       ws.send(JSON.stringify({ forget_all: ["ticks", "balance", "proposal_open_contract"] }));
       ws.send(JSON.stringify({ balance: 1, subscribe: 1 }));
       ws.send(JSON.stringify({ ticks: "R_100", subscribe: 1 }));
       ws.send(JSON.stringify({ proposal_open_contract: 1, subscribe: 1 }));
     }
 
-    // Handle Live Balance Updates
     if (data.msg_type === "balance") {
       accountBalanceEl.textContent = `${Number(data.balance.balance).toFixed(2)} ${data.balance.currency}`;
     }
 
-    // Handle Live Volatility 100 Ticks
     if (data.msg_type === "tick") {
       const quote = Number(data.tick.quote).toFixed(2);
       liveTickEl.textContent = quote;
       lastDigitEl.textContent = quote.slice(-1);
     }
 
-    // Handle Buy Confirmation
     if (data.msg_type === "buy") {
       addLog(`[Trade] Contract #${data.buy.contract_id} opened | Stake: $${currentStake.toFixed(2)}`);
     }
 
-    // Handle Contract Settlement (Win / Loss)
     if (data.msg_type === "proposal_open_contract") {
       const contract = data.proposal_open_contract;
       if (contract.is_sold && waitingForContract) {
@@ -176,7 +173,6 @@ function connectWebSocket() {
           currentStake = Number((currentStake * martingale).toFixed(2));
         }
 
-        // Check Take Profit & Stop Loss Limits
         if (sessionProfit >= takeProfit) {
           addLog(`[Target Reached] Take Profit of $${takeProfit.toFixed(2)} hit! Stopping bot.`, "highlight-green");
           stopBot();
@@ -281,3 +277,6 @@ const savedActiveId = localStorage.getItem("allano_active_acct");
 if (savedAccounts.length > 0) {
   accounts = savedAccounts;
   activeAccount = accounts.find((a) => a.acct === savedActiveId) || accounts[0];
+  populateAccountSwitcher();
+  connectWebSocket();
+}
