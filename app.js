@@ -1,5 +1,5 @@
-const APP_ID = "350cqOOeGCMWqrKgybWnf"; // <-- REPLACE WITH YOUR NUMERIC DERIV APP ID
-const WS_URL = `wss://://derivws.com{350cqOOeGCMWqrKgybWnf}`;
+const APP_ID = "350cqOOeGCMWqrKgybWnf"; // <-- REPLACE 12345 WITH YOUR NUMERIC APP ID FROM MANAGE APPS
+const WS_URL = `wss://://derivws.com{APP_ID}`;
 
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
@@ -56,8 +56,8 @@ function parseOAuthCallback() {
 
 // 2. OAuth Login & Logout Handlers
 function redirectToDerivLogin() {
-  if (APP_ID === "350cqOOeGCMWqrKgybWnf") {
-    alert("Please replace YOUR_APP_ID in app.js with your Deriv App ID first.");
+  if (!APP_ID || APP_ID === "12345" || isNaN(Number(APP_ID))) {
+    alert("Please replace 12345 on Line 1 of app.js with your numeric Deriv App ID.");
     return;
   }
   window.location.href = `https://deriv.com{APP_ID}`;
@@ -281,6 +281,3 @@ const savedActiveId = localStorage.getItem("allano_active_acct");
 if (savedAccounts.length > 0) {
   accounts = savedAccounts;
   activeAccount = accounts.find((a) => a.acct === savedActiveId) || accounts[0];
-  populateAccountSwitcher();
-  connectWebSocket();
-}
