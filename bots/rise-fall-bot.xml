@@ -1,0 +1,204 @@
+<xml xmlns="http://w3.org" is_dbot="true" collection="false">
+  <variables>
+    <variable type="" id="var_initial_stake" islocal="false" iscloud="false">Initial Stake</variable>
+    <variable type="" id="var_stake" islocal="false" iscloud="false">Current Stake</variable>
+    <variable type="" id="var_martingale" islocal="false" iscloud="false">Martingale Multiplier</variable>
+    <variable type="" id="var_tp" islocal="false" iscloud="false">Take Profit</variable>
+    <variable type="" id="var_sl" islocal="false" iscloud="false">Stop Loss</variable>
+    <variable type="" id="var_ema_fast" islocal="false" iscloud="false">EMA Fast</variable>
+    <variable type="" id="var_ema_slow" islocal="false" iscloud="false">EMA Slow</variable>
+    <variable type="" id="var_rsi" islocal="false" iscloud="false">RSI Value</variable>
+  </variables>
+
+  <!-- Block 1: Trade Parameters & Initial Variables -->
+  <block type="trade_definition" id="trade_def_1" x="0" y="0">
+    <statement name="TRADE_OPTIONS">
+      <block type="trade_definition_market" id="market_1">
+        <field name="MARKET_LIST">synthetic_index</field>
+        <field name="SUBMARKET_LIST">random_index</field>
+        <field name="SYMBOL_LIST">R_75</field>
+        <next>
+          <block type="trade_definition_tradetype" id="tradetype_1">
+            <field name="TRADETYPECAT_LIST">callput</field>
+            <field name="TRADETYPE_LIST">callput</field>
+            <next>
+              <block type="trade_definition_contracttype" id="contracttype_1">
+                <field name="TYPE_LIST">both</field>
+                <next>
+                  <block type="trade_definition_candleinterval" id="candle_1">
+                    <field name="CANDLEINTERVAL_LIST">60</field>
+                    <next>
+                      <block type="trade_definition_restartbuysell" id="restart_1">
+                        <field name="TIME_MACHINE_ENABLED">FALSE</field>
+                        <next>
+                          <block type="trade_definition_restartonerror" id="onerror_1">
+                            <field name="RESTARTONERROR">TRUE</field>
+                          </block>
+                        </next>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+
+    <statement name="INITIALIZATION">
+      <block type="variables_set" id="init_1">
+        <field name="VAR" id="var_initial_stake" variabletype="">Initial Stake</field>
+        <value name="VALUE">
+          <block type="math_number" id="num_1"><field name="NUM">1</field></block>
+        </value>
+        <next>
+          <block type="variables_set" id="init_2">
+            <field name="VAR" id="var_stake" variabletype="">Current Stake</field>
+            <value name="VALUE">
+              <block type="variables_get" id="get_init_1">
+                <field name="VAR" id="var_initial_stake" variabletype="">Initial Stake</field>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="init_3">
+                <field name="VAR" id="var_martingale" variabletype="">Martingale Multiplier</field>
+                <value name="VALUE">
+                  <block type="math_number" id="num_2"><field name="NUM">2.1</field></block>
+                </value>
+                <next>
+                  <block type="variables_set" id="init_4">
+                    <field name="VAR" id="var_tp" variabletype="">Take Profit</field>
+                    <value name="VALUE">
+                      <block type="math_number" id="num_3"><field name="NUM">10</field></block>
+                    </value>
+                    <next>
+                      <block type="variables_set" id="init_5">
+                        <field name="VAR" id="var_sl" variabletype="">Stop Loss</field>
+                        <value name="VALUE">
+                          <block type="math_number" id="num_4"><field name="NUM">15</field></block>
+                        </value>
+                      </block>
+                    </next>
+                  </block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </next>
+      </block>
+    </statement>
+
+    <statement name="SUBMARKET">
+      <block type="trade_definition_tradeoptions" id="options_1">
+        <mutation has_first_barrier="false" has_second_barrier="false" has_prediction="false"></mutation>
+        <field name="DURATIONTYPE_LIST">t</field>
+        <value name="DURATION">
+          <shadow type="math_number" id="dur_1"><field name="NUM">5</field></shadow>
+        </value>
+        <value name="AMOUNT">
+          <shadow type="math_number" id="amt_shadow"><field name="NUM">1</field></shadow>
+          <block type="variables_get" id="get_stake_1">
+            <field name="VAR" id="var_stake" variabletype="">Current Stake</field>
+          </block>
+        </value>
+      </block>
+    </statement>
+  </block>
+
+  <!-- Block 2: Entry Conditions (EMA 9 / EMA 21 + RSI 14) -->
+  <block type="before_purchase" id="before_1" x="0" y="550">
+    <statement name="BEFOREPURCHASE_STACK">
+      <block type="variables_set" id="calc_ema_fast">
+        <field name="VAR" id="var_ema_fast" variabletype="">EMA Fast</field>
+        <value name="VALUE">
+          <block type="ema" id="ema_9">
+            <value name="INPUT">
+              <block type="ohlc_values" id="ohlc_1">
+                <field name="OHLCFIELD_LIST">close</field>
+                <field name="CANDLEINTERVAL_LIST">default</field>
+              </block>
+            </value>
+            <value name="PERIOD">
+              <shadow type="math_number" id="ema_p9"><field name="NUM">9</field></shadow>
+            </value>
+          </block>
+        </value>
+        <next>
+          <block type="variables_set" id="calc_ema_slow">
+            <field name="VAR" id="var_ema_slow" variabletype="">EMA Slow</field>
+            <value name="VALUE">
+              <block type="ema" id="ema_21">
+                <value name="INPUT">
+                  <block type="ohlc_values" id="ohlc_2">
+                    <field name="OHLCFIELD_LIST">close</field>
+                    <field name="CANDLEINTERVAL_LIST">default</field>
+                  </block>
+                </value>
+                <value name="PERIOD">
+                  <shadow type="math_number" id="ema_p21"><field name="NUM">21</field></shadow>
+                </value>
+              </block>
+            </value>
+            <next>
+              <block type="variables_set" id="calc_rsi">
+                <field name="VAR" id="var_rsi" variabletype="">RSI Value</field>
+                <value name="VALUE">
+                  <block type="rsi" id="rsi_14">
+                    <value name="INPUT">
+                      <block type="ohlc_values" id="ohlc_3">
+                        <field name="OHLCFIELD_LIST">close</field>
+                        <field name="CANDLEINTERVAL_LIST">default</field>
+                      </block>
+                    </value>
+                    <value name="PERIOD">
+                      <shadow type="math_number" id="rsi_p14"><field name="NUM">14</field></shadow>
+                    </value>
+                  </block>
+                </value>
+                <next>
+                  <!-- Check Rise (CALL) Condition -->
+                  <block type="controls_if" id="if_rise">
+                    <mutation elseif="1"></mutation>
+                    <value name="IF0">
+                      <block type="logic_operation" id="and_rise">
+                        <field name="OP">AND</field>
+                        <value name="A">
+                          <block type="logic_compare" id="cmp_ema_rise">
+                            <field name="OP">GT</field>
+                            <value name="A">
+                              <block type="variables_get" id="g_ef1"><field name="VAR" id="var_ema_fast" variabletype="">EMA Fast</field></block>
+                            </value>
+                            <value name="B">
+                              <block type="variables_get" id="g_es1"><field name="VAR" id="var_ema_slow" variabletype="">EMA Slow</field></block>
+                            </value>
+                          </block>
+                        </value>
+                        <value name="B">
+                          <block type="logic_compare" id="cmp_rsi_rise">
+                            <field name="OP">GT</field>
+                            <value name="A">
+                              <block type="variables_get" id="g_rsi1"><field name="VAR" id="var_rsi" variabletype="">RSI Value</field></block>
+                            </value>
+                            <value name="B">
+                              <block type="math_number" id="rsi_55"><field name="NUM">55</field></block>
+                            </value>
+                          </block>
+                        </value>
+                      </block>
+                    </value>
+                    <statement name="DO0">
+                      <block type="purchase" id="buy_call">
+                        <field name="PURCHASE_LIST">CALL</field>
+                      </block>
+                    </statement>
+                    <!-- Check Fall (PUT) Condition -->
+                    <value name="IF1">
+                      <block type="logic_operation" id="and_fall">
+                        <field name="OP">AND</field>
+                        <value name="A">
+                          <block type="logic_compare" id="cmp_ema_fall">
+                            <field name="OP">LT</field>
+                            <value name="A">
+                              <block type="variables_get" id="g_ef2"><field name="VAR" id="var_ema_fast" variabletype="">EMA Fast</field></block>
+                            </value>

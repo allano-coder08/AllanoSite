@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AllanoSite | Automated Deriv Trading & Bot Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="logo-dot"></span>
+      <h2>Allano<span>Site</span></h2>
+    </div>
+    <div class="nav-actions">
+      <span id="connection-badge" class="badge badge-offline">Disconnected</span>
+      <button id="login-btn" class="btn btn-primary">Connect Deriv Account</button>
+      <button id="logout-btn" class="btn btn-secondary hidden">Disconnect</button>
+    </div>
+  </header>
+
+  <!-- Landing Hero (Shown when logged out) -->
+  <main id="landing-section" class="hero">
+    <div class="hero-content">
+      <span class="tag">Powered by Deriv API</span>
+      <h1>Automated Synthetic Indices Trading Made Simple</h1>
+      <p>
+        Connect your Deriv account securely via OAuth to access curated XML trading bots,
+        live volatility feeds, and built-in automated execution.
+      </p>
+      <button id="hero-login-btn" class="btn btn-primary btn-large">Login with Deriv to Start</button>
+    </div>
+  </main>
+
+  <!-- Main Trading Dashboard (Shown when logged in) -->
+  <main id="dashboard-section" class="dashboard hidden">
+    <!-- Top Account & Market Summary Cards -->
+    <section class="stats-grid">
+      <div class="card stat-card">
+        <span class="stat-label">Active Account</span>
+        <div class="account-row">
+          <h3 id="account-id">-</h3>
+          <span id="account-type" class="badge badge-demo">DEMO</span>
+        </div>
+        <select id="account-switcher" class="select-input hidden"></select>
+      </div>
+
+      <div class="card stat-card">
+        <span class="stat-label">Available Balance</span>
+        <h3 id="account-balance" class="highlight-green">0.00 USD</h3>
+        <span class="stat-sub">Real-time Deriv Wallet</span>
+      </div>
+
+      <div class="card stat-card">
+        <span class="stat-label">Volatility 100 (1s) / R_100</span>
+        <h3 id="live-tick" class="highlight-cyan">Waiting...</h3>
+        <span class="stat-sub">Last Digit: <strong id="last-digit">-</strong></span>
+      </div>
+    </section>
+
+    <!-- Main Two-Column Workspace -->
+    <section class="workspace-grid">
+      <!-- Left Column: Built-in Auto Bot Runner -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Auto-Execution Engine (Digit Over 2)</h3>
+          <span id="bot-status-pill" class="badge badge-idle">IDLE</span>
+        </div>
+        <p class="card-desc">
+          Executes 1-tick Digit Over 2 contracts on Volatility 100 with automatic stake management.
+        </p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="bot-stake">Initial Stake ($)</label>
+            <input type="number" id="bot-stake" value="1.00" min="0.35" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label for="bot-martingale">Martingale Multiplier</label>
+            <input type="number" id="bot-martingale" value="2.1" min="1.0" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label for="bot-tp">Take Profit ($)</label>
+            <input type="number" id="bot-tp" value="10.00" min="1.0" step="1" />
+          </div>
+          <div class="form-group">
+            <label for="bot-sl">Stop Loss ($)</label>
+            <input type="number" id="bot-sl" value="15.00" min="1.0" step="1" />
+          </div>
+        </div>
+
+        <div class="profit-bar">
+          <span>Session Net P/L:</span>
+          <strong id="session-pnl" class="highlight-green">$0.00</strong>
+        </div>
+
+        <div class="btn-group">
+          <button id="start-bot-btn" class="btn btn-success">Start Auto Bot</button>
+          <button id="stop-bot-btn" class="btn btn-danger hidden">Stop Bot</button>
+          <button id="clear-logs-btn" class="btn btn-secondary">Clear Logs</button>
+        </div>
+
+        <div class="terminal-wrapper">
+          <div class="terminal-header">Live Execution Terminal</div>
+          <div id="bot-logs" class="terminal-logs">
+            <div>[System] Ready. Configure parameters and click Start Auto Bot.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Downloadable XML Bot Vault -->
+      <div class="card">
+        <div class="card-header">
+          <h3>AllanoSite XML Bot Vault</h3>
+          <span class="badge badge-cyan">DBot Ready</span>
+        </div>
+        <p class="card-desc">
+          Download verified XML strategies and load them directly inside Deriv DBot.
+        </p>
+
+        <div class="bot-list">
+          <div class="bot-card">
+            <div class="bot-info">
+              <h4>Over/Under Digit Harvester</h4>
+              <p>Market: Volatility 100 • Strategy: Digit Over 2 with smart recovery.</p>
+            </div>
+            <div class="bot-actions">
+              <a href="bots/over-under-bot.xml" download class="btn btn-primary btn-sm">Download XML</a>
+            </div>
+          </div>
+
+          <div class="bot-card">
+            <div class="bot-info">
+              <h4>Rise/Fall Trend Sniper</h4>
+              <p>Market: Volatility 75 • Strategy: EMA crossover momentum entries.</p>
+            </div>
+            <div class="bot-actions">
+              <a href="bots/rise-fall-bot.xml" download class="btn btn-primary btn-sm">Download XML</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="dbot-launch-box">
+          <h4>Need to run an XML file?</h4>
+          <p>Open Deriv DBot in a new tab and upload your downloaded XML file.</p>
+          <a href="https://deriv.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-full">
+            Launch Deriv DBot &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Regulatory Risk Disclaimer Footer -->
+  <footer class="footer">
+    <p>
+      <strong>Risk Warning:</strong> Deriv offers complex derivatives, such as options and contracts for difference ("CFDs").
+      These products may not be suitable for all clients, and trading them puts you at risk. Never trade with borrowed money
+      or money you cannot afford to lose. Always test strategies on a Demo (VRTC) account first.
+    </p>
+    <p class="copyright">&copy; 2026 AllanoSite. Independent Third-Party Deriv Application.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
