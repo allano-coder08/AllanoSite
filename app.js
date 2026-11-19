@@ -56,7 +56,7 @@ function parseOAuthCallback() {
 
 // 2. OAuth Login & Logout Handlers
 function redirectToDerivLogin() {
-  if (APP_ID === "YOUR_APP_ID") {
+  if (APP_ID === "350cqOOeGCMWqrKgybWnf") {
     alert("Please replace YOUR_APP_ID in app.js with your Deriv App ID first.");
     return;
   }
