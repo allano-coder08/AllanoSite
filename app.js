@@ -1,5 +1,5 @@
 const APP_ID = "350cqOOeGCMWqrKgybWnf"; // <-- REPLACE WITH YOUR NUMERIC DERIV APP ID
-const WS_URL = `wss://://derivws.com{APP_ID}`;
+const WS_URL = `wss://://derivws.com{350cqOOeGCMWqrKgybWnf}`;
 
 // DOM Elements
 const loginBtn = document.getElementById("login-btn");
