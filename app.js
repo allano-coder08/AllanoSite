@@ -7,7 +7,7 @@ const APP_ID = "350cqOOeGCMWqrKgybWnf";
 
 // >>> OPTIONAL (testing only): a Deriv API token with Read + Trade scopes.
 // >>> Leave empty to use the normal Deriv login button (recommended).
-const MANUAL_API_TOKEN = "";
+const MANUAL_API_TOKEN = "350cqOOeGCMWqrKgybWnf";
 
 const WS_URL = `wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`;
 const OAUTH_URL = `https://oauth.deriv.com/oauth2/authorize?app_id=${APP_ID}`;
