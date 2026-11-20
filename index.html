@@ -4,9 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AllanoSite | Automated Deriv Trading & Bot Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Falling dollars (decorative) -->
+  <div id="money-rain" class="money-rain" aria-hidden="true"></div>
+  <div class="glow glow-purple" aria-hidden="true"></div>
+  <div class="glow glow-blue" aria-hidden="true"></div>
+
   <!-- Top Navigation Bar -->
   <header class="navbar">
     <div class="nav-brand">
@@ -15,22 +23,48 @@
     </div>
     <div class="nav-actions">
       <span id="connection-badge" class="badge badge-offline">Disconnected</span>
-      <button id="login-btn" class="btn btn-primary">Connect Deriv Account</button>
+      <button id="login-btn" class="btn btn-primary">Login</button>
+      <!-- Keep this link right after #login-btn: CSS hides it when you are logged in -->
+      <a class="btn btn-outline nav-register" href="https://deriv.com/signup/" target="_blank" rel="noopener noreferrer">Register</a>
       <button id="logout-btn" class="btn btn-secondary hidden">Disconnect</button>
     </div>
   </header>
 
   <!-- Landing Hero (Shown when logged out) -->
-  <main id="landing-section" class="hero">
-    <div class="hero-content">
-      <span class="tag">Powered by Deriv API</span>
-      <h1>Automated Synthetic Indices Trading Made Simple</h1>
-      <p>
-        Connect your Deriv account securely via OAuth to access curated XML trading bots,
-        live volatility feeds, and built-in automated execution.
-      </p>
-      <button id="hero-login-btn" class="btn btn-primary btn-large">Login with Deriv to Start</button>
-    </div>
+  <main id="landing-section" class="landing">
+    <section class="hero">
+      <div class="hero-content">
+        <span class="tag">Powered by Deriv API</span>
+        <h1>Trade Smarter with <span class="grad-text">Automated</span> Synthetic Indices Bots</h1>
+        <p>
+          Log in securely with your Deriv account to access curated XML trading bots,
+          live volatility feeds and built-in automated execution.
+        </p>
+        <div class="hero-buttons">
+          <button id="hero-login-btn" class="btn btn-primary btn-large">Login</button>
+          <a class="btn btn-outline btn-large" href="https://deriv.com/signup/" target="_blank" rel="noopener noreferrer">Register</a>
+        </div>
+        <p class="hero-note">New to Deriv? Tap <strong>Register</strong> to open a free account, then come back and <strong>Login</strong>.</p>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <div class="feature-icon fi-purple">&#9889;</div>
+        <h3>Live Volatility Feed</h3>
+        <p>Watch Volatility 100 ticks and last digits update in real time.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon fi-blue">&#129302;</div>
+        <h3>Auto-Execution Engine</h3>
+        <p>Run Digit Over bots with stake, take profit and stop loss controls.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon fi-green">&#128230;</div>
+        <h3>XML Bot Vault</h3>
+        <p>Download strategies and load them straight into Deriv DBot.</p>
+      </div>
+    </section>
   </main>
 
   <!-- Main Trading Dashboard (Shown when logged in) -->
@@ -123,7 +157,7 @@
           <div class="bot-card">
             <div class="bot-info">
               <h4>Over/Under Digit Harvester</h4>
-              <p>Market: Volatility 100 • Strategy: Digit Over 2 with smart recovery.</p>
+              <p>Market: Volatility 100 &bull; Strategy: Digit Over 2 with smart recovery.</p>
             </div>
             <div class="bot-actions">
               <a href="bots/over-under-bot.xml" download class="btn btn-primary btn-sm">Download XML</a>
@@ -133,7 +167,7 @@
           <div class="bot-card">
             <div class="bot-info">
               <h4>Rise/Fall Trend Sniper</h4>
-              <p>Market: Volatility 75 • Strategy: EMA crossover momentum entries.</p>
+              <p>Market: Volatility 75 &bull; Strategy: EMA crossover momentum entries.</p>
             </div>
             <div class="bot-actions">
               <a href="bots/rise-fall-bot.xml" download class="btn btn-primary btn-sm">Download XML</a>
@@ -144,7 +178,7 @@
         <div class="dbot-launch-box">
           <h4>Need to run an XML file?</h4>
           <p>Open Deriv DBot in a new tab and upload your downloaded XML file.</p>
-          <a href="https://deriv.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-full">
+          <a href="https://app.deriv.com/bot" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-full">
             Launch Deriv DBot &rarr;
           </a>
         </div>
@@ -161,6 +195,26 @@
     </p>
     <p class="copyright">&copy; 2026 AllanoSite. Independent Third-Party Deriv Application.</p>
   </footer>
+
+  <!-- Falling dollars generator (decoration only) -->
+  <script>
+    (function () {
+      var rain = document.getElementById("money-rain");
+      if (!rain) return;
+      var colors = ["#22c55e", "#7c3aed", "#3b82f6", "#ef4444", "#ffffff"];
+      for (var i = 0; i < 32; i++) {
+        var s = document.createElement("span");
+        s.textContent = "$";
+        s.style.left = Math.random() * 100 + "%";
+        s.style.fontSize = 14 + Math.random() * 28 + "px";
+        s.style.animationDuration = 8 + Math.random() * 10 + "s";
+        s.style.animationDelay = -Math.random() * 18 + "s";
+        s.style.color = colors[i % colors.length];
+        s.style.setProperty("--o", (0.15 + Math.random() * 0.35).toFixed(2));
+        rain.appendChild(s);
+      }
+    })();
+  </script>
 
   <script src="app.js"></script>
 </body>
