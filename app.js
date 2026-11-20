@@ -108,7 +108,7 @@ function parseOAuthCallback() {
 
 // ---------- 2. Login / logout ----------
 function redirectToDerivLogin() {
-  if (!APP_ID || APP_ID === "YOUR_APP_ID") {
+  if (!APP_ID || APP_ID === "350cqOOeGCMWqrKgybWnf") {
     alert("Please set your Deriv App ID in app.js first.");
     return;
   }
